@@ -7580,27 +7580,22 @@ module.exports = function (Twig) {
       var state = this;
       return Twig.expression.parseAsync.call(state, token.stack, context).then(function (fileName) {
         if (Array.isArray(fileName)) {
-          var result = fileName.reduce(function (acc, file) {
+          var result = fileName.reverse().reduce(function (acc, file) {
             try {
               return {
                 render: state.template.importFile(file),
-                fileName: file,
-                lastError: null
+                fileName: file
               };
             } catch (error) {
-              return {
-                render: null,
-                fileName: null,
-                lastError: error
-              };
+              /* eslint-disable-line no-unsed-vars */
+              return acc;
             }
           }, {
             render: null,
-            fileName: null,
-            lastError: null
+            fileName: null
           });
 
-          if (result.lastError === null && result.fileName) {
+          if (result.fileName !== null) {
             state.template.parentTemplate = result.fileName;
           }
         } else {
